@@ -1,10 +1,10 @@
-'''
+"""
 处理原始文本，输出为特征文件
 features.v1.pkl
 features.v2.pkl
 author:yuml
 5052909@qq.com
-'''
+"""
 import os,sys
 sys.path.append(os.path.abspath('../'))
 #检查所需的python包
@@ -52,6 +52,8 @@ def load_location():
             for item in tmp[1].split(','):
                 dict[item]=tmp[0]
     return dict
+
+
 def load_dict(filename):
     city_dict={}
     with open(filename,encoding='utf8') as f:

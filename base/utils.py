@@ -6,10 +6,11 @@ from scipy import sparse
 import numpy as np
 from base.dataset import load_w2v,smp_path
 
+
 '''
 工具函数
 '''
-def get(items,i):
+def get(items, i):
     return [item[i] for item in items]
 
 '''载入资源'''

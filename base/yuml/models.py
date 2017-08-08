@@ -34,7 +34,8 @@ class StackEnsemble(object):
         self.predict_yprob=[] #测试集的预测结果（5折bagging）
         self.indexes=None
         pass
-    def fit(self,X,y):
+
+    def fit(self, X, y):
         '''
         训练Stack Ensemble模型，会得到n_folds个分类器
         '''
@@ -42,9 +43,9 @@ class StackEnsemble(object):
         indexes=StratifiedKFold(y,n_folds=self.n_folds,shuffle=True,random_state=self.seed)
         self.indexes=indexes
         cnt=0
-        for ti,vi in indexes:
+        for ti, vi in indexes:
             print('--------stack-%d-------------'%(cnt+1))
-            cnt+=1
+            cnt += 1
             model=self.model_creator()
             #兼容keras的多输入
             if self.multi_input:
@@ -72,11 +73,11 @@ class StackEnsemble(object):
         print('----------------------------------')
         print('----log loss: %f, accuracy: %f'%(log_loss(y,y_prob),accuracy_score(y,np.argmax(y_prob,axis=1))))
         
-        self.fit_yprob=y_prob #得到对训练集的预测值
+        self.fit_yprob=y_prob  # 得到对训练集的预测值
         return y_prob
 
-    def predict(self,X,type='aver'):
-        return self.predict_proba(X,type=type)
+    def predict(self, X, type='aver'):
+        return self.predict_proba(X, type=type)
     
     '''
     type表示返回数据的格式
@@ -193,7 +194,8 @@ class WeightVoter(object):
     def fit_vote(self,y):
         self.fit(y)
         return self.vote()
-        
+
+
 class MCNN2(object):
     '''
     cnn与人工特征混合，输入数据为2组

@@ -104,7 +104,7 @@ def get_nn_x2(ftype):
         fs=(fp[0],fp[1],fp[2],fp[3],fp[4],ft_norm_hour,ft_norm_cnt,
             fp_sloca[:3200],fp_sprov[:3200],fp_sexist[:3200],
             em_age.get_next_input()[:3200],
-           em_gen.get_next_input()[:3200])
+            em_gen.get_next_input()[:3200])
     else:
         f_text,f_stat,f_times,fp=f_test
         ft_norm_hour=f_times[:,38:62]
@@ -112,7 +112,7 @@ def get_nn_x2(ftype):
         fs=(fp[0],fp[1],fp[2],fp[3],fp[4],ft_norm_hour,ft_norm_cnt,
             fp_sloca[3200:],fp_sprov[3200:],fp_sexist[3200:],
             em_age.get_next_input()[3200:],
-           em_gen.get_next_input()[3200:])
+            m_gen.get_next_input()[3200:])
     return get_xs(fs)
 
 #----------------填充空值----------------------------------------------

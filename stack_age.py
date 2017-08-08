@@ -42,7 +42,8 @@ fids,f_w2v2,f_w2v2_test=pickle.load(open(feature_path+'/f_word_svd.300.cache','r
 f_w2v=np.concatenate((f_w2v1,f_w2v2),axis=1)
 f_w2v_test=np.concatenate((f_w2v1_test,f_w2v2_test),axis=1)
 
-#--------------- MCNN ---------------
+
+# --------------- MCNN ---------------
 class MCNN(object):
     '''
     使用word2vec*tfidf的cnn并与人工特征混合，接口与sklearn分类器一致
@@ -50,27 +51,26 @@ class MCNN(object):
     def __init__(self,cnn_input_dim,num_class=3):
         self.num_class=num_class
         self.build(cnn_input_dim)
-        
     
-    def build(self,vector_dim):
+    def build(self, vector_dim):
         #句子特征
         model=Sequential()
-        model.add(Convolution2D(100,1,vector_dim,input_shape=(2,100,vector_dim),activation='relu'))
+        model.add(Convolution2D(100, 1, vector_dim, input_shape=(2, 100, vector_dim), activation='relu'))
         model.add(Dropout(0.5))
-        model.add(MaxPooling2D(pool_size=(50,1)))
+        model.add(MaxPooling2D(pool_size=(50, 1)))
         model.add(Flatten())
         model.add(Dropout(0.5))
-        model.add(Dense(100,activation='tanh'))
+        model.add(Dense(100, activation='tanh'))
         model.add(Dropout(0.5))
-        model.add(Dense(3,activation='softmax'))
-        model.compile(loss='categorical_crossentropy',optimizer='adadelta',metrics=['accuracy'],)
+        model.add(Dense(3, activation='softmax'))
+        model.compile(loss='categorical_crossentropy', optimizer='adadelta', metrics=['accuracy'],)
         
         self.model=model
         self.earlyStopping=EarlyStopping(monitor='val_loss', patience=25, verbose=0, mode='auto')
         self.checkpoint=ModelCheckpointPlus(filepath='weights.hdf5',monitor='val_loss',verbose_show=20)
         
     def fit(self,X,y,Xvi=None,yvi=None):
-        yc=to_categorical(y)
+        yc = to_categorical(y)
         if Xvi is None:
             self.model.fit(X,yc,nb_epoch=1000,verbose=0,validation_split=0.2,batch_size=32,callbacks=[self.earlyStopping,self.checkpoint])
         else:
@@ -80,15 +80,17 @@ class MCNN(object):
         self.model.load_weights('weights.hdf5')
         return self.model
     
-    def predict(self,X):
+    def predict(self, X):
         return predict_proba(X)
     
-    def predict_proba(self,X):
+    def predict_proba(self, X):
         return self.model.predict(X)
     
-#-----------------XGBoost --------------------------------
+# -----------------XGBoost --------------------------------
 
 import xgboost as xgb
+
+
 class XGB(object):
     def __init__(self):
         self.params={
@@ -117,7 +119,7 @@ class XGB(object):
         self.model=xgb.train(self.params,dtrain,num_boost_round=1000,early_stopping_rounds=25,evals=(watchlist),verbose_eval=100)
         return self.model
     
-    def predict(self,X):
+    def predict(self, X):
         return self.predict_proba(X)
     
     def predict_proba(self,X):
